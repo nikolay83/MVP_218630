@@ -1,0 +1,39 @@
+<script type="text/ng-template" id="google-autocomplete-template.html">
+    <a>
+        <span bind-html-unsafe="match.model.title.$t"></span>
+        [<span bind-html-unsafe="match.model.gd$email[0].address"></span>]
+    </a>
+</script>
+
+<script type="text/ng-template" id="select-google-friends.html">
+    <header class="mhead">
+        <h3 class="heading alt">
+            <span>PLEASE FIND YOUR GOOGLE FRIEND</span>
+        </h3>
+    </header>
+    <!-- /.mhead -->
+    <div class="rw twOverflow">
+        <input type="text" name="friends" class="textTwitterCtrl"
+               placeholder="Type your friend's name here"
+               data-ng-model="vm.selectedFriend"
+               typeahead-template-url="google-autocomplete-template.html"
+               typeahead="friend as friend.name for friend in vm.searchFriends($viewValue)"
+               typeahead-on-select="vm.friendSelected()"
+               data-ng-disabled = "vm.disabled"
+                >
+    </div>
+
+    <!--<div class="mcon ah">New Modal Content</div>-->
+    <!-- /.mcon -->
+    <footer class="actn tw">
+        <button class="btn btn-primary" data-ng-click="vm.cancel()">
+            Cancel
+        </button>
+        <button class="btn btn-submit" data-ng-click="vm.send()">
+            Send
+        </button>
+        <div class="clear"></div>
+    </footer>
+    <!-- /.actn -->
+
+</script>

@@ -1,0 +1,336 @@
+<div class="container info" >
+
+    <div ng-include="'partials/module/profile-aside.html'"></div>
+  <!-- End Aside -->
+  <div class="main">
+  <span flow-init="{singleFile:true, target: uploadUrl}"
+        flow-name="uploader.flow" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
+  	<h2>My Info</h2>
+    <div class="bar" data-ng-if="showContactInformation()">
+        <h3>Update Profile</h3>
+    </div>
+    <div class="data info-data" data-ng-form name="platformAdminInfoForm" data-ng-if="showContactInformation()">
+        <table>
+            <tr>
+                <th>Last Name</th>
+                <td class="details">
+                    <input type="text" data-ng-model="platformAdminInfo.lastName" maxlength="1024" name="lastName" data-ng-class="{'error':submitted && platformAdminInfoForm.lastName.$error.required}" required="required"/>
+                </td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td class="details">
+                    <input type="password" data-ng-model="platformAdminInfo.password" maxlength="100" name="password" data-ng-class="{'error':submitted && platformAdminInfoForm.password.$error.required}" required="required"/>
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="save-platform-admin details"><a href="javascript:;" class="btn btn-primary" data-ng-click="savePlatformAdminInfo(platformAdminInfo)">Save</a></td>
+            </tr>
+        </table>
+    </div>
+    <div class="bar" data-ng-show="isUser">
+        <h3>CONTACT INFORMATION</h3>
+        <div class="button-group" data-ng-show="infoEdit">
+            <a href="javascript:;" class="btn btn-secondary" data-ng-click="saveInfo($flow.files, infoForm);" data-ng-class="{disabled: submitting}">Save Info</a>
+            <a href="javascript:;" class="btn btn-primary" data-ng-click="cancelInfo();">Cancel</a>
+        </div>
+        <a href="javascript:;" class="link link-edit" data-ng-show="!infoEdit" data-ng-click="showEditInfo()">Edit</a>
+        <span class="small">Is Info Public?</span>
+    </div>
+    <!-- End .well -->
+    <div class="data info-data" data-ng-form name="infoForm" data-ng-show="isUser">
+        <table>
+            <tr>
+                <th>First Name</th>
+                <td class="details">
+                    <span data-ng-bind="profileInfo.firstName" data-ng-hide="infoEdit"></span>
+                    <input type="text" data-ng-model="profileEditInfo.firstName" data-ng-if="infoEdit" maxlength="1024" name="firstName"
+                           data-ng-class="{'error':submitted && infoForm.firstName.$error.required}" required="required"/>
+                </td>
+                <td>
+                    <div class="iphone-toggle-buttons">
+                        <label><input type="checkbox" data-ng-model="profileEditInfo.isFirstNamePublic" ng-disabled="!infoEdit"/><span>checkbox 0</span></label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Last Name</th>
+                <td class="details">
+                    <span data-ng-bind="profileInfo.lastName" data-ng-hide="infoEdit"></span>
+                    <input type="text" data-ng-model="profileEditInfo.lastName" data-ng-if="infoEdit" maxlength="1024" name="lastName"
+                           data-ng-class="{'error':submitted && infoForm.lastName.$error.required}" required="required"/>
+                </td>
+                <td>
+                    <div class="iphone-toggle-buttons">
+                        <label><input type="checkbox" data-ng-model="profileEditInfo.isLastNamePublic" ng-disabled="!infoEdit"/><span>checkbox 0</span></label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td class="details">
+                    <span data-ng-bind="profileInfo.email" data-ng-hide="infoEdit"></span>
+                    <input type="text" data-ng-model="profileEditInfo.email" data-ng-if="infoEdit" maxlength="1024" name="email"
+                           ng-pattern="/^[a-z]+[a-z0-9._]+@[a-z]+\.[a-z.]{2,5}$/"
+                           data-ng-class="{'error':submitted && infoForm.email.$error.required}" required="required"/>
+                </td>
+                <td>
+                    <div class="iphone-toggle-buttons">
+                        <label><input type="checkbox" data-ng-model="profileEditInfo.isEmailPublic" ng-disabled="!infoEdit"/><span>checkbox 0</span></label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td class="details">
+                    <span data-ng-bind="profileInfo.location" data-ng-hide="infoEdit"></span>
+                    <input type="text" data-ng-model="profileEditInfo.location" data-ng-if="infoEdit" maxlength="1024" name="location"
+                           data-ng-class="{'error':(submitted && infoForm.location.$error.required)}"/>
+                </td>
+                <td>
+                    <div class="iphone-toggle-buttons">
+                        <label><input type="checkbox" data-ng-model="profileEditInfo.isLocationPublic" ng-disabled="!infoEdit"/><span>checkbox 0</span></label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Photo/ Image</th>
+                <td class="details" >
+                    <span data-ng-hide="infoEdit"></span>
+                    <div class="file" data-ng-show="infoEdit">
+                        <input type="text" class="file" readonly="readonly" data-ng-show="!$flow.files.length" />
+                        <input type="text" class="file" readonly="readonly" data-ng-show="$flow.files.length" data-ng-model="$flow.files[0].name" />
+                        <a href="javascript:;" class="btn btn-secondary" flow-attrs="{accept:'image/*'}" flow-btn>Browse</a>
+                    </div>
+                </td>
+                <td>
+                    <div class="iphone-toggle-buttons">
+                        <label><input type="checkbox" data-ng-model="profileEditInfo.isPicturePublic" ng-disabled="!infoEdit"/><span>checkbox 0</span></label>
+                    </div>
+                </td>
+            </tr>
+	    <tr>
+	      <th colspan="3">
+		<label class="checkbox" data-ng-if="!infoEdit">
+		  <input type="checkbox" class="checkbox"
+			 data-ng-model="profileEditInfo.subscribedToNews"
+			 disabled="disabled"/>
+		  <i></i>
+		  <span>
+		    Subscribed to Founder$hare newsletters
+		  </span>
+		</label>
+		<label for="subscribedToNews" class="checkbox" data-ng-if="infoEdit">
+		  <input type="checkbox" class="checkbox"
+			 name="subscribedToNews" id="subscribedToNews"
+			 data-ng-model="profileEditInfo.subscribedToNews"/>
+		  <i></i>
+		  <span>
+		    Subscribe me to Founder$hare newsletters
+		  </span>
+		</label>
+	      </th>
+            </tr>
+        </table>
+    </div>
+</span>
+  <span flow-init="{singleFile:true, target: uploadUrl}"
+        flow-name="uploader.flow" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
+    <div class="bar founder" data-ng-show="isFounder">
+    	<h3>BUSINESS INFORMATION</h3>
+        <div class="button-group" data-ng-show="edit">
+            <a href="javascript:;" class="btn btn-secondary" data-ng-click="saveBusiness($flow.files, infoBuzForm);" data-ng-class="{disabled: submitting}">Save Info</a>
+            <a href="javascript:;" class="btn btn-primary" data-ng-click="cancelBusiness();">Cancel</a>
+        </div>
+        <a href="javascript:;" class="link link-edit" data-ng-show="!edit" data-ng-click="editBusiness();">Edit</a>
+    </div>
+    <!-- End .well -->
+    <div class="data info-data" data-ng-form name="infoBuzForm" data-ng-show="isFounder">
+        <table>
+            <tr>
+                <th>Business Telephone</th>
+                <td class="details">
+                    <span data-ng-bind="readInfo.telephoneNumber" data-ng-hide="edit"></span>
+                    <input type="text" data-ng-model="editInfo.telephoneNumber" data-ng-if="edit" maxlength="1024" name="telephoneNumber"
+                           data-ng-class="{'error':(submitted && !infoBuzForm.telephoneNumber.$valid)}" required="required"/>
+                </td>
+            </tr>
+            <tr>
+                <th>Business Name</th>
+                <td class="details">
+                    <span data-ng-bind="readInfo.name" data-ng-hide="edit && !readInfo.isVerified"></span>
+                    <input type="text" data-ng-model="editInfo.name" data-ng-if="edit && !readInfo.isVerified" maxlength="1024" name="name"
+                           data-ng-class="{'error':(submitted && !infoBuzForm.name.$valid)}" required="required"/>
+                </td>
+            </tr>
+            <tr data-ng-hide="!readInfo.isVerified">
+                <th>Business Address</th>
+                <td class="details">
+                    <span>{{readInfo.streetAddress}} {{readInfo.city}}, {{readInfo.state}} {{readInfo.country}} {{readInfo.zip}}</span>
+                </td>
+            </tr>
+            <tr data-ng-hide="readInfo.isVerified">
+                <th>Street Address</th>
+                <td class="details">
+                    <span data-ng-bind="readInfo.streetAddress" data-ng-hide="edit && !readInfo.isVerified"></span>
+                    <input type="text" data-ng-model="editInfo.streetAddress" data-ng-if="edit && !readInfo.isVerified" name="streetAddress"
+                           maxlength="1024" data-ng-class="{'error':(submitted && !infoBuzForm.streetAddress.$valid)}" required="required"/>
+                </td>
+            </tr>
+            <tr data-ng-hide="readInfo.isVerified">
+                <th>City</th>
+                <td class="details">
+                    <span data-ng-bind="readInfo.city" data-ng-hide="edit && !readInfo.isVerified"></span>
+                    <input type="text" data-ng-model="editInfo.city" data-ng-if="edit && !readInfo.isVerified" name="city"
+                           maxlength="1024" data-ng-class="{'error':(submitted && !infoBuzForm.city.$valid)}" required="required"/>
+                </td>
+            </tr>
+            <tr data-ng-hide="readInfo.isVerified">
+                <th>State</th>
+                <td class="details">
+                    <span data-ng-bind="readInfo.state" data-ng-hide="edit && !readInfo.isVerified"></span>
+                    <input type="text" data-ng-model="editInfo.state" data-ng-if="edit && !readInfo.isVerified" name="state"
+                           maxlength="1024" data-ng-class="{'error':(submitted && !infoBuzForm.state.$valid)}" required="required"/>
+                </td>
+            </tr>
+            <tr data-ng-hide="readInfo.isVerified">
+                <th>Country</th>
+                <td class="details">
+                    <span data-ng-bind="readInfo.country" data-ng-hide="edit && !readInfo.isVerified"></span>
+                    <input type="text" data-ng-model="editInfo.country" data-ng-if="edit && !readInfo.isVerified" name="country"
+                           maxlength="1024" data-ng-class="{'error':(submitted && !infoBuzForm.country.$valid)}" required="required"/>
+                </td>
+            </tr>
+            <tr data-ng-hide="readInfo.isVerified">
+                <th>ZIP</th>
+                <td class="details">
+                    <span data-ng-bind="readInfo.zip" data-ng-hide="edit && !readInfo.isVerified"></span>
+                    <input type="text" data-ng-model="editInfo.zip" data-ng-if="edit && !readInfo.isVerified" name="zip"
+                           maxlength="1024" data-ng-class="{'error':(submitted && !infoBuzForm.zip.$valid)}" required="required"/>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Business Type</th>
+                <td class="details">
+                    <!-- <span data-ng-hide="edit">{{ Myinfo.business_type.describe.name }}</span> -->
+                    <div data-ng-hide="edit">{{readInfo.type['name']}}</div>
+                    <div id="business_type" class="error-field" ng-class="{error: submitted && !editInfo.type.id}" dropdown-select="allBusinessTypes" dropdown-model="editInfo.type" dropdown-item-label="name" data-ng-hide="!edit"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>Logo/ Image</th>
+                <td class="details">
+                    <span data-ng-hide="edit"></span>
+                    <div class="file " data-ng-show="edit"  ng-class="{error: submitted && !readInfo.picture && !$flow.files.length }">
+                        <input type="text" class="file" readonly="readonly" data-ng-show="!$flow.files.length" />
+                        <input type="text" class="file" readonly="readonly" data-ng-show="$flow.files.length" data-ng-model="$flow.files[0].name" />
+                        <a href="javascript:;" class="btn btn-secondary" flow-attrs="{accept:'image/*'}" flow-btn>Browse</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td class="details">
+                    <span data-ng-bind="readInfo.description" class="multiline" data-ng-hide="edit"></span>
+                    <textarea type="text" data-ng-model="editInfo.description" data-ng-if="edit" name="description"
+                              maxlength="1024" data-ng-class="{'error':(submitted && !infoBuzForm.description.$valid)}" required="required"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>Hours Open</th>
+                <td class="details">
+                    <span data-ng-bind="readInfo.businessHours" data-ng-hide="edit"></span>
+                    <input type="text" data-ng-model="editInfo.businessHours" data-ng-if="edit" name="businessHours"
+                           maxlength="1024" data-ng-class="{'error':(submitted && !infoBuzForm.businessHours.$valid)}" required="required"/>
+                </td>
+            </tr>
+            <tr>
+                <th>Website URL</th>
+                <td class="details">
+                    <span data-ng-bind="readInfo.website" data-ng-hide="edit"></span>
+                    <input type="url" data-ng-model="editInfo.website" data-ng-if="edit"  name="website"
+                           maxlength="1024" data-ng-class="{'error':(submitted && !infoBuzForm.website.$valid)}" required="required"/>
+                </td>
+            </tr>
+	    <tr>
+	      <th colspan="2">
+		<label class="checkbox" data-ng-if="!edit">
+		  <input type="checkbox" class="checkbox"
+			 data-ng-model="profileEditInfo.subscribedToNews"
+			 disabled="disabled"/>
+		  <i></i>
+		  <span>
+		    Subscribed to Founder$hare newsletters
+		  </span>
+		</label>
+		<label for="subscribedToNews" class="checkbox" data-ng-if="edit">
+		  <input type="checkbox" class="checkbox"
+			 name="subscribedToNews" id="subscribedToNews"
+			 data-ng-model="profileEditInfo.subscribedToNews"/>
+		  <i></i>
+		  <span>
+		    Subscribe me to Founder$hare newsletters
+		  </span>
+		</label>
+	      </th>
+            </tr>
+        </table>
+    </div>
+    </span>
+    <!-- End .data -->
+    <div class="bar" data-ng-if="!showContactInformation()">
+    	<h3>ACCOUNT PASSWORD</h3>
+        <div class="button-group" data-ng-show="password.switchPassword === true;">
+            <a href="javascript:;" class="btn btn-secondary" data-ng-click="savePassword()">Save Password</a>
+            <a href="javascript:;" class="btn btn-primary" data-ng-click="cancelPassword()">Cancel</a>
+        </div>
+        <a href="javascript:;" class="link link-change" data-ng-hide="password.switchPassword === true;" data-ng-click="password.switchPassword=!password.switchPassword">Change Password</a>
+    </div>
+    <!-- End .well -->
+    <div class="data password-data" data-ng-form name="passwordForm" data-ng-if="!showContactInformation()">
+    	<table>
+            <tr>
+                <th>Current Password</th>
+                <td class="details">
+                    <span data-ng-hide="password.switchPassword">*******</span>
+                    <input type="password" id="password" name="password" maxlength="100"
+                        data-ng-model="password.currentPassword"
+                        data-ng-show="password.switchPassword"
+                        data-ng-class="{true: 'error'}[submitted && passwordForm.password.$invalid]"
+                        required="required" placeholder="Enter current password" />
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <th>New Password</th>
+                <td class="details">
+                    <input type="password" id="password_new" name="password_new" maxlength="100"
+                        data-ng-model="password.newPassword"
+                        data-ng-show="password.switchPassword"
+                        data-ng-class="{true: 'error'}[submitted && passwordForm.password_new.$invalid]"
+                        required="required" />
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <th>Confirm Password</th>
+                <td class="details">
+                    <span data-ng-hide="password.switchPassword"></span>
+                    <input type="password" id="password_confirm" name="password_confirm" maxlength="100"
+                        data-ng-show="password.switchPassword"
+                        data-ng-model="password.confirmPassword"
+                        data-ng-class="{true: 'error'}[submitted && passwordForm.password_confirm.$invalid]"
+                        pw-check="password_new"
+                        required="required" />
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+
+  <!-- End .main -->
+
+</div>
+<!-- End .container -->

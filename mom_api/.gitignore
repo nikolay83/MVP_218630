@@ -1,0 +1,9 @@
+node_modules
+*.log
+temp
+uploads
+.idea
+coverage
+config/local.js
+config/production.js
+pending-gifts.csv
